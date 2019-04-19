@@ -14,6 +14,7 @@ using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase.Command;
 using log4net;
 using System.Configuration;
+using SuperSocket.Facility.Protocol;
 
 namespace AgpsServer
 {
@@ -25,6 +26,8 @@ namespace AgpsServer
 
         //获取Configuration对象
         private static Configuration config = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        public static List<string> Keys = new List<string>();
+        public static List<string> Pwds = new List<string>();
 
         static void Main(string[] args)
         {
@@ -52,33 +55,43 @@ namespace AgpsServer
             //判断App.config配置文件中是否有key
             if (ConfigurationManager.AppSettings.HasKeys())
             {
-                List<string> theKeys = new List<string>();      //保存key的集合
-                List<string> theValues = new List<string>();    //保存value的集合
+                //List<string> theKeys = new List<string>();      //保存key的集合
+                //List<string> theValues = new List<string>();    //保存value的集合
+                ////遍历出所有的key并添加进thekeys集合
+                //foreach (string theKey in ConfigurationManager.AppSettings.Keys)
+                //{
+                //    theKeys.Add(theKey);
+                //}
+                ////根据key遍历出所有的value并添加进theValues集合
+                //for (int i = 0; i < theKeys.Count; i++)
+                //{
+                //    foreach (string theValue in ConfigurationManager.AppSettings.GetValues(theKeys[i]))
+                //    {
+                //        theValues.Add(theValue);
+                //    }
+                //}
+                ////验证key和value
+                //for (int i = 0; i < theKeys.Count; i++)
+                //{
+                //    Console.WriteLine("Account: {0}, {1}", theKeys[i], theValues[i]);
+                //}
                 //遍历出所有的key并添加进thekeys集合
                 foreach (string theKey in ConfigurationManager.AppSettings.Keys)
                 {
-                    theKeys.Add(theKey);
+                    Keys.Add(theKey);
                 }
                 //根据key遍历出所有的value并添加进theValues集合
-                for (int i = 0; i < theKeys.Count; i++)
+                for (int i = 0; i < Keys.Count; i++)
                 {
-                    foreach (string theValue in ConfigurationManager.AppSettings.GetValues(theKeys[i]))
+                    foreach (string theValue in ConfigurationManager.AppSettings.GetValues(Keys[i]))
                     {
-                        theValues.Add(theValue);
+                        Pwds.Add(theValue);
                     }
                 }
-                //验证key和value
-                Console.WriteLine("**********key**********");
-                foreach (string s in theKeys)
+                for (int i = 0; i < Keys.Count; i++)
                 {
-                    Console.WriteLine(s);
+                    Console.WriteLine("Account: {0}, {1}", Keys[i], Pwds[i]);
                 }
-                Console.WriteLine("**********value**********");
-                foreach (string s in theValues)
-                {
-                    Console.WriteLine(s);
-                }
-                Console.WriteLine("**********config parse succ**********");
             }
 
             // 通过工厂创建一个加载器。
@@ -100,6 +113,7 @@ namespace AgpsServer
                 Console.ReadKey();
                 return;
             }
+            
             while (Console.ReadKey().KeyChar != 'q')
             {
                 Console.WriteLine();
@@ -107,38 +121,6 @@ namespace AgpsServer
             }
             // 停止服务器
             bootstrap.Stop();
-
-            //var bootstrap = BootstrapFactory.CreateBootstrap();
-
-            //if (!bootstrap.Initialize())
-            //{
-            //    Console.WriteLine("Failed to initialize!");
-            //    Console.ReadKey();
-            //    return;
-            //}
-
-            //var result = bootstrap.Start();
-            //Console.WriteLine("Start result : {0}!", result);
-            //if (result == StartResult.Failed)
-            //{
-            //    Console.WriteLine("Failed to start!");
-            //    Console.ReadKey();
-            //    return;
-            //}
-
-            //Console.WriteLine("Press key 'q' to stop it!");
-            //while (Console.ReadKey().KeyChar != 'q')
-            //{
-            //    Console.WriteLine();
-            //    continue;
-            //}
-
-            //Console.WriteLine();
-
-            ////Stop the appServer
-            //bootstrap.Stop();
-            //Console.WriteLine("The server was stopped!");
-            //Console.ReadKey();
 
             //var appServer = new AppServer();
 
@@ -277,7 +259,7 @@ namespace AgpsServer
     // 在下面的代码中，当一个新的连接连接上时，服务器端立即向客户端发送欢迎信息。 这段代码还重写了其它AppSession的方法用以实现自己的业务逻辑。
     public class TelnetSession : AppSession<TelnetSession>
     {
-        // 重载OnSessionStarted函数，赞同于appServer.NewSessionConnected += NewSessionConnected
+        // 重载OnSessionStarted函数，等同于appServer.NewSessionConnected += NewSessionConnected
         protected override void OnSessionStarted()
         {
             // 会话链接成功后的逻辑部分。
@@ -310,6 +292,17 @@ namespace AgpsServer
     // 现在 TelnetSession 将可以用在 TelnetServer 的会话中，也有很多方法可以重载
     public class TelnetServer : AppServer<TelnetSession>
     {
+        //默认使用的是命令行协议。
+        public TelnetServer() : base(new CommandLineReceiveFilterFactory(Encoding.Default, new BasicRequestInfoParser("=", ",")))
+        {
+            //LOGIN:USER=PWD
+        }
+
+        //public TelnetServer() : base(new CountSpliterReceiveFilterFactory((byte)'=', 2))
+        //{
+        //    //固定数量分隔符协议
+        //}
+
         protected override bool Setup(IRootConfig rootConfig, IServerConfig config)
         {
             // 对家配置文件进行相应的修改。
@@ -329,6 +322,8 @@ namespace AgpsServer
         }
     }
 
+    #region
+    //命令行协议
     public class LOGIN : CommandBase<TelnetSession, StringRequestInfo>
     {
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
@@ -342,6 +337,19 @@ namespace AgpsServer
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
             session.Send("ECHO succ!");
+            for (int i = 0; i < Program.Keys.Count; i++)
+            {
+                Console.WriteLine("key {0},{1}", Program.Keys[i], Program.Pwds[i]);
+            }
         }
     }
+
+    public class APPKEY : CommandBase<TelnetSession, StringRequestInfo>
+    {
+        public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
+        {
+            session.Send("APPKEY succ!");
+        }
+    }
+    #endregion
 }
