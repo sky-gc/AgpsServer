@@ -351,5 +351,13 @@ namespace AgpsServer
             session.Send("APPKEY succ!");
         }
     }
+
+    public class SECURENET01 : CommandBase<TelnetSession, StringRequestInfo>
+    {
+        public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
+        {
+            session.Send("SECURENET01 succ!");
+        }
+    }
     #endregion
 }
