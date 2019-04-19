@@ -78,6 +78,7 @@ namespace AgpsServer
                 {
                     Console.WriteLine(s);
                 }
+                Console.WriteLine("**********config parse succ**********");
             }
 
             // 通过工厂创建一个加载器。
