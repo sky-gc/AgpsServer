@@ -367,5 +367,29 @@ namespace AgpsServer
             session.Send("SECURENET succ!");
         }
     }
+
+    public class MTKAGPS : CommandBase<TelnetSession, StringRequestInfo>
+    {
+        public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
+        {
+            session.Send("MTKAGPS succ!");
+        }
+    }
+
+    public class TDAGPS : CommandBase<TelnetSession, StringRequestInfo>
+    {
+        public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
+        {
+            session.Send("TDAGPS succ!");
+        }
+    }
+
+    public class ATAGPS : CommandBase<TelnetSession, StringRequestInfo>
+    {
+        public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
+        {
+            session.Send("ATAGPS succ!");
+        }
+    }
     #endregion
 }
