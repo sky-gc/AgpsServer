@@ -26,8 +26,10 @@ namespace AgpsServer
 
         //获取Configuration对象
         private static Configuration config = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        public static List<string> Keys = new List<string>();
-        public static List<string> Pwds = new List<string>();
+        //public static List<string> Keys = new List<string>();
+        //public static List<string> Pwds = new List<string>();
+
+        public static Dictionary<string, string> KeyDic = new Dictionary<string, string>();
 
         static void Main(string[] args)
         {
@@ -76,21 +78,30 @@ namespace AgpsServer
                 //    Console.WriteLine("Account: {0}, {1}", theKeys[i], theValues[i]);
                 //}
                 //遍历出所有的key并添加进thekeys集合
-                foreach (string theKey in ConfigurationManager.AppSettings.Keys)
+                //foreach (string theKey in ConfigurationManager.AppSettings.Keys)
+                //{
+                //    Keys.Add(theKey);
+                //}
+                ////根据key遍历出所有的value并添加进theValues集合
+                //for (int i = 0; i < Keys.Count; i++)
+                //{
+                //    foreach (string theValue in ConfigurationManager.AppSettings.GetValues(Keys[i]))
+                //    {
+                //        Pwds.Add(theValue);
+                //    }
+                //}
+                //for (int i = 0; i < Keys.Count; i++)
+                //{
+                //    Console.WriteLine("Account: {0},{1}", Keys[i], Pwds[i]);
+                //}
+                foreach(string key in ConfigurationManager.AppSettings.Keys)
                 {
-                    Keys.Add(theKey);
+                    string value = ConfigurationManager.AppSettings.GetValue(key);
+                    KeyDic.Add(key, value);
                 }
-                //根据key遍历出所有的value并添加进theValues集合
-                for (int i = 0; i < Keys.Count; i++)
+                foreach (KeyValuePair<string, string> kvp in KeyDic)
                 {
-                    foreach (string theValue in ConfigurationManager.AppSettings.GetValues(Keys[i]))
-                    {
-                        Pwds.Add(theValue);
-                    }
-                }
-                for (int i = 0; i < Keys.Count; i++)
-                {
-                    Console.WriteLine("Account: {0}, {1}", Keys[i], Pwds[i]);
+                    Console.WriteLine("KeyDic: {0},{1}", kvp.Key, kvp.Value);
                 }
             }
 
@@ -337,10 +348,6 @@ namespace AgpsServer
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
             session.Send("ECHO succ!");
-            for (int i = 0; i < Program.Keys.Count; i++)
-            {
-                Console.WriteLine("key {0},{1}", Program.Keys[i], Program.Pwds[i]);
-            }
         }
     }
 
@@ -349,10 +356,22 @@ namespace AgpsServer
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
             session.Send("APPKEY succ!");
+            string value = Program.KeyDic["appkey"];
+            Console.WriteLine("appkey value :{0}", value);
+            int i = string.Compare(requestInfo.Body, value);
+            if (i == 0)
+            {
+                Console.WriteLine("APPKEY pwd succ!");
+            }
+            else
+            {
+                Console.WriteLine("invaild pwd!");
+                session.Close();
+            }
         }
     }
 
-    public class SECURENET01 : CommandBase<TelnetSession, StringRequestInfo>
+        public class SECURENET01 : CommandBase<TelnetSession, StringRequestInfo>
     {
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
