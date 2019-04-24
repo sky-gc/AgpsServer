@@ -432,6 +432,7 @@ namespace AgpsServer
                 //session.Send(utfString1);
                 //session.Send(new ArraySegment<byte>(rsp));
                 session.Send(new ArraySegment<byte>(AgpsClient.AgpsData));
+                Console.WriteLine("Send agps data len {0}", AgpsClient.AgpsData.Length);
                 session.Close();
             }
             else
@@ -482,5 +483,4 @@ namespace AgpsServer
         }
     }
     #endregion
-
 }
