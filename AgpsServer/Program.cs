@@ -18,6 +18,7 @@ using SuperSocket.Facility.Protocol;
 using System.Data;
 using System.Data.Linq;
 using System.Collections;
+using System.Timers;
 
 namespace AgpsServer
 {
@@ -89,6 +90,14 @@ namespace AgpsServer
             AgpsClient client = new AgpsClient();
             client.StartClient(host, port);
             //Console.WriteLine(AgpsClient.AgpsData.Length);
+
+            //启动定时器，定时更新AGPS数据。
+            System.Timers.Timer agpsUbloxTimer = new System.Timers.Timer();
+            agpsUbloxTimer.AutoReset = true;
+            agpsUbloxTimer.Enabled = true;
+            agpsUbloxTimer.Interval = 600000;
+            agpsUbloxTimer.Elapsed += new System.Timers.ElapsedEventHandler(AgpsUbloxHandle);
+            agpsUbloxTimer.Start();
 
             Console.ReadKey();
             Console.WriteLine();
@@ -307,8 +316,19 @@ namespace AgpsServer
         //    }
         //}
 
+        private static void AgpsUbloxHandle(object source, ElapsedEventArgs e)
+        {
+            string host = "agps.u-blox.com";
+            int port = 46434;
 
+            AgpsClient client = new AgpsClient();
+            //string host = "121.199.26.185";
+            //int port = 5000;
+            Console.WriteLine("AgpsUbloxHandle");
+            //string result = SocketSendReceive(host, port);
+            client.StartClient(host, port);
         }
+    }
     // 在下面的代码中，当一个新的连接连接上时，服务器端立即向客户端发送欢迎信息。 这段代码还重写了其它AppSession的方法用以实现自己的业务逻辑。
     public class TelnetSession : AppSession<TelnetSession>
     {
@@ -462,4 +482,5 @@ namespace AgpsServer
         }
     }
     #endregion
+
 }
