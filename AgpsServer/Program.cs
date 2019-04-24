@@ -15,6 +15,9 @@ using SuperSocket.SocketBase.Command;
 using log4net;
 using System.Configuration;
 using SuperSocket.Facility.Protocol;
+using System.Data;
+using System.Data.Linq;
+using System.Collections;
 
 namespace AgpsServer
 {
@@ -37,6 +40,35 @@ namespace AgpsServer
 
             Console.ReadKey();
             Console.WriteLine();
+            
+            //测试代码
+            //byte[] rsp = { 0x30, 0x00, 0x31, 0x00, 0x1D, 0x60, 0xD1, 0x79, 0x80, 0xA0, 0xA1 };
+            //byte[] rsp1 = { 0x40, 0x00, 0x41, 0x00, 0x1D, 0x60, 0xD1, 0x79, 0x80, 0xB0, 0xB1, 0xC0, 0xCF, 0xFE, 0xFF };
+            //string utfString = Encoding.UTF8.GetString(rsp, 0, rsp.Length);
+            //string utfString1 = Encoding.ASCII.GetString(rsp, 0, rsp.Length);
+            //string str = Encoding.GetEncoding(936).GetString(rsp, 0, rsp.Length);
+            //Console.WriteLine(utfString);
+            //Console.WriteLine(utfString1);
+            //Console.WriteLine(str);
+            //byte[] rsp2 = new byte[10];
+            //Console.WriteLine(rsp2.Length);
+            //List< byte > ls = new List<byte>();
+            //ls.AddRange(rsp);
+            //ls.AddRange(rsp1);
+            //rsp2 = ls.ToArray();
+            //Console.WriteLine(rsp2.Length);
+            //ArrayList arrLi = new ArrayList();
+            //arrLi.AddRange(rsp);
+            //Console.WriteLine(arrLi.ToArray().Length);
+            //arrLi.AddRange(rsp1);
+            //Console.WriteLine(arrLi.ToArray().Length);
+            //byte[] tmpRsp = { 0x60, 0xD1 };
+            //var i = arrLi.IndexOf(tmpRsp);
+            //Console.WriteLine(i);
+            //byte tmpRsp1 = 0x60;
+            //var j = arrLi.IndexOf(tmpRsp1);
+            //Console.WriteLine(j);
+            //Console.WriteLine(Array.IndexOf(rsp, tmpRsp));
 
             //// 注意是TelnetServer
             //var appServer = new TelnetServer();
@@ -50,6 +82,16 @@ namespace AgpsServer
             //}
             //// 停止服务器。
             //appServer.Stop();
+
+            //启动客户端
+            string host = "agps.u-blox.com";
+            int port = 46434;
+            AgpsClient client = new AgpsClient();
+            client.StartClient(host, port);
+            //Console.WriteLine(AgpsClient.AgpsData.Length);
+
+            Console.ReadKey();
+            Console.WriteLine();
 
             //读取配置文件
             //ConfigurationSection accounts = config.AppSettings.Settings());
@@ -274,7 +316,7 @@ namespace AgpsServer
         protected override void OnSessionStarted()
         {
             // 会话链接成功后的逻辑部分。
-            this.Send("Welcome to SuperSocket Telnet Server");
+            //this.Send("Welcome to SuperSocket Telnet Server");
             //this.Close();
         }
 
@@ -355,13 +397,22 @@ namespace AgpsServer
     {
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
-            session.Send("APPKEY succ!");
+            //session.Send("APPKEY succ!");
             string value = Program.KeyDic["appkey"];
             Console.WriteLine("appkey value :{0}", value);
             int i = string.Compare(requestInfo.Body, value);
             if (i == 0)
             {
                 Console.WriteLine("APPKEY pwd succ!");
+                //session.Send(AgpsClient.AgpsData);
+                //byte[] rsp = {0x30, 0x31, 0x7F, 0xA0, 0xA1, 0x00, 0x01, 0x02};
+                //string utfString = Encoding.GetEncoding("iso-8859-1").GetString(rsp, 0, rsp.Length);
+                //string utfString1 = Encoding.GetEncoding("UTF-8").GetString(rsp, 0, rsp.Length); //IBM00858
+                //session.Send(utfString);
+                //session.Send(utfString1);
+                //session.Send(new ArraySegment<byte>(rsp));
+                session.Send(new ArraySegment<byte>(AgpsClient.AgpsData));
+                session.Close();
             }
             else
             {
