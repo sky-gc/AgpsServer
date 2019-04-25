@@ -164,7 +164,7 @@ namespace AgpsServer
                 Console.ReadKey();
                 return;
             }
-
+            
             var result = bootstrap.Start();
             Console.WriteLine("Start result : {0}!", result);
             log.Debug("Start result");
@@ -336,7 +336,7 @@ namespace AgpsServer
         protected override void OnSessionStarted()
         {
             // 会话链接成功后的逻辑部分。
-            //this.Send("Welcome to SuperSocket Telnet Server");
+            this.Send("Welcome to SuperSocket Telnet Server");
             //this.Close();
         }
 
@@ -401,7 +401,7 @@ namespace AgpsServer
     {
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
-            session.Send("Login succ {0} {1}!", requestInfo.Key, requestInfo.Body);
+            session.Send("Login succ {0} {1} {2}!", requestInfo.Key, requestInfo.Body, requestInfo.Parameters);
         }
     }
 
@@ -443,7 +443,7 @@ namespace AgpsServer
         }
     }
 
-        public class SECURENET01 : CommandBase<TelnetSession, StringRequestInfo>
+    public class SECURENET01 : CommandBase<TelnetSession, StringRequestInfo>
     {
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
@@ -480,6 +480,17 @@ namespace AgpsServer
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
             session.Send("ATAGPS succ!");
+        }
+    }
+    #endregion
+
+    #region
+    public class EEEE : CommandBase<MyFixedHeaderReceiveProtocolSession, BinaryRequestInfo>
+    {
+        public override void ExecuteCommand(MyFixedHeaderReceiveProtocolSession session, BinaryRequestInfo requestInfo)
+        {
+            //session.Send(new ArraySegment<byte>(requestInfo.Body));
+            session.Send("EEEE succ!");
         }
     }
     #endregion

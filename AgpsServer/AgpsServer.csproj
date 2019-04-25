@@ -70,8 +70,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgpsClient.cs" />
+    <Compile Include="AgpsReceiveFilter.cs" />
+    <Compile Include="AgpsRequsetInfo.cs" />
+    <Compile Include="MyCommand.cs" />
+    <Compile Include="MyFixedHeaderReceiveFilter.cs" />
+    <Compile Include="MyFixedHeaderReceiveProtocolServer.cs" />
+    <Compile Include="MyFixedHeaderReceiveProtocolSession.cs" />
+    <Compile Include="MyReceiveFilter.cs" />
+    <Compile Include="MyRequestInfo.cs" />
+    <Compile Include="MyServer.cs" />
+    <Compile Include="MySession.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
