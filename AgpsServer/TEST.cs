@@ -9,11 +9,11 @@ using SuperSocket.SocketBase.Protocol;
 
 namespace AgpsServer
 {
-    public class TEST : StringCommandBase
+    public class TEST : CommandBase<MySession, MyRequestInfo>
     {
-        public override void ExecuteCommand(AppSession session, StringRequestInfo requestInfo)
+        public override void ExecuteCommand(MySession session, MyRequestInfo requestInfo)
         {
-            session.Send((int.Parse(requestInfo[0] + int.Parse(requestInfo[1])).ToString()));
+            session.Send(requestInfo.Key + requestInfo.value);
         }
     }
 }

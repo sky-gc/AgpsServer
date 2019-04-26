@@ -13,6 +13,12 @@ namespace AgpsServer
 
         public string value { get; set; }
 
+        public MyRequestInfo()
+        {
+            this.Key = "ERR";
+            this.Key = "123456";
+        }
+
         /*
         // Other properties
         */

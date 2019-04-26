@@ -25,21 +25,25 @@ namespace AgpsServer
         public MyRequestInfo Filter(byte[] readBuffer, int offset, int length, bool toBeCopied, out int rest)
         {
             rest = 0;
+            var requestInfo = new MyRequestInfo();
             string strReq = System.Text.Encoding.Default.GetString(readBuffer, offset, length);
             Console.WriteLine("MyRequestInfo {0},{1},{2}", offset, length, strReq);
             
             if (length <= 0)
             {
-                return null;
+                return requestInfo;
             }
 
-            var requestInfo = new MyRequestInfo();
             string[] strParts = strReq.Split('=');
+            if (strParts.Count() < 2)
+            {
+                return requestInfo;
+            }
             requestInfo.Key = strParts[0];
             requestInfo.value = strParts[1];
             if ((0 == requestInfo.Key.Length) || (0 == requestInfo.value.Length))
             {
-                return null;
+                return requestInfo;
             }
             InternalReset();
             Console.WriteLine("MyRequestInfo {0},{1}", requestInfo.Key, requestInfo.value);

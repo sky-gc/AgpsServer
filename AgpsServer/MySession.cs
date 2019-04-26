@@ -8,7 +8,7 @@ using SuperSocket.SocketBase.Protocol;
 
 namespace AgpsServer
 {
-    class MySession : AppSession<MySession, MyRequestInfo>
+    public class MySession : AppSession<MySession, MyRequestInfo>
     {
         protected override void HandleException(Exception e)
         {
@@ -27,6 +27,7 @@ namespace AgpsServer
         {
             // 收到未知请求的逻辑部分
             this.Send("Unknow request");
+            this.Close();
         }
 
         protected override void OnSessionClosed(CloseReason reason)
