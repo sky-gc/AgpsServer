@@ -72,6 +72,7 @@
     <Compile Include="AgpsClient.cs" />
     <Compile Include="AgpsReceiveFilter.cs" />
     <Compile Include="AgpsRequsetInfo.cs" />
+    <Compile Include="command\APPKEY.cs" />
     <Compile Include="MyFixedHeaderReceiveFilter.cs" />
     <Compile Include="MyFixedHeaderReceiveProtocolServer.cs" />
     <Compile Include="MyFixedHeaderReceiveProtocolSession.cs" />

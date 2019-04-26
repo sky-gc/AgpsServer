@@ -19,7 +19,7 @@ namespace AgpsServer
         protected override void OnSessionStarted()
         {
             // 会话链接成功后的逻辑部分。
-            this.Send("Welcome to SuperSocket MySession Server");
+            //this.Send("Welcome to SuperSocket MySession Server");
             //this.Close();
         }
 
