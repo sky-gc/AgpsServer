@@ -73,6 +73,8 @@
     <Compile Include="AgpsReceiveFilter.cs" />
     <Compile Include="AgpsRequsetInfo.cs" />
     <Compile Include="command\APPKEY.cs" />
+    <Compile Include="command\MTKAPPKEY.cs" />
+    <Compile Include="MtkAgpsData.cs" />
     <Compile Include="MyFixedHeaderReceiveFilter.cs" />
     <Compile Include="MyFixedHeaderReceiveProtocolServer.cs" />
     <Compile Include="MyFixedHeaderReceiveProtocolSession.cs" />

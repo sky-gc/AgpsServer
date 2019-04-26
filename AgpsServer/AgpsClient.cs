@@ -146,6 +146,11 @@ namespace AgpsServer
                 //Release the socket.
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
+                
+                //打印日志
+                string infoStr = "Ublox agps data " + AgpsData.Length;
+                if (log.IsInfoEnabled) log.Info(infoStr);
+
                 string closeSucc = "Socket close!!!";
                 Console.WriteLine(closeSucc);
                 if (log.IsDebugEnabled) log.Debug(closeSucc);

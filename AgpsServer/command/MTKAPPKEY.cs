@@ -7,12 +7,12 @@ using SuperSocket.SocketBase.Command;
 
 namespace AgpsServer.command
 {
-    public class APPKEY : CommandBase<MySession, MyRequestInfo>
+    public class MTKAPPKEY : CommandBase<MySession, MyRequestInfo>
     {
         public override void ExecuteCommand(MySession session, MyRequestInfo requestInfo)
         {
-            session.Send(new ArraySegment<byte>(AgpsClient.AgpsData));
-            Console.WriteLine("Ublox send agps data len {0}", AgpsClient.AgpsData.Length);
+            session.Send(new ArraySegment<byte>(MtkAgpsData.Data));
+            Console.WriteLine("MTK send agps data len {0}", MtkAgpsData.Data.Length);
             session.Close();
         }
     }

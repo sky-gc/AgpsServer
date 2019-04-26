@@ -26,7 +26,7 @@ namespace AgpsServer
     {
         // Create a logger for use in this class
         //private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("Test");
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         //获取Configuration对象
         private static Configuration config = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -37,7 +37,7 @@ namespace AgpsServer
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Press any key to start the server!");
+            Console.WriteLine("Press any key to start the agps client!");
 
             Console.ReadKey();
             Console.WriteLine();
@@ -89,7 +89,12 @@ namespace AgpsServer
             int port = 46434;
             AgpsClient client = new AgpsClient();
             client.StartClient(host, port);
-            //Console.WriteLine(AgpsClient.AgpsData.Length);
+            Console.WriteLine("Ublox Agps data len {0}", AgpsClient.AgpsData.Length);
+
+            //MTK AGPS data
+            MtkAgpsData mtkAgps = new MtkAgpsData();
+            mtkAgps.update();
+            Console.WriteLine("Mtk Agps data len {0}", MtkAgpsData.Data.Length);
 
             //启动定时器，定时更新AGPS数据。
             System.Timers.Timer agpsUbloxTimer = new System.Timers.Timer();
@@ -99,6 +104,7 @@ namespace AgpsServer
             agpsUbloxTimer.Elapsed += new System.Timers.ElapsedEventHandler(AgpsUbloxHandle);
             agpsUbloxTimer.Start();
 
+            Console.WriteLine("Press any key to start the agps server!");
             Console.ReadKey();
             Console.WriteLine();
 
@@ -327,6 +333,10 @@ namespace AgpsServer
             Console.WriteLine("AgpsUbloxHandle");
             //string result = SocketSendReceive(host, port);
             client.StartClient(host, port);
+
+            //MTK AGPS data
+            MtkAgpsData mtkAgps = new MtkAgpsData();
+            mtkAgps.update();
         }
     }
     // 在下面的代码中，当一个新的连接连接上时，服务器端立即向客户端发送欢迎信息。 这段代码还重写了其它AppSession的方法用以实现自己的业务逻辑。
@@ -456,22 +466,6 @@ namespace AgpsServer
         public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
         {
             session.Send("SECURENET succ!");
-        }
-    }
-
-    public class MTKAGPS : CommandBase<TelnetSession, StringRequestInfo>
-    {
-        public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
-        {
-            session.Send("MTKAGPS succ!");
-        }
-    }
-
-    public class TDAGPS : CommandBase<TelnetSession, StringRequestInfo>
-    {
-        public override void ExecuteCommand(TelnetSession session, StringRequestInfo requestInfo)
-        {
-            session.Send("TDAGPS succ!");
         }
     }
 
