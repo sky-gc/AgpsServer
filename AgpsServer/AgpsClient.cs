@@ -149,7 +149,7 @@ namespace AgpsServer
                 
                 //打印日志
                 string infoStr = "Ublox agps data " + AgpsData.Length;
-                if (log.IsInfoEnabled) log.Info(infoStr);
+                if (log.IsDebugEnabled) log.Debug(infoStr);
 
                 string closeSucc = "Socket close!!!";
                 Console.WriteLine(closeSucc);

@@ -12,7 +12,7 @@ namespace AgpsServer
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public static byte[] Data = new byte[5000];
-        private static string mtkAgpsDataFilePath = "../agps/MTK6HS.EPO";
+        private static string mtkAgpsDataFilePath = "../mtkagps/MTK6HS.EPO";
 
         //public MtkAgpsData()
         //{
@@ -49,9 +49,9 @@ namespace AgpsServer
                 aFile.Close();
 
                 string str = "MTK agps data " + Data.Length;
-                if (log.IsInfoEnabled)
+                if (log.IsDebugEnabled)
                 {
-                    log.Info(str);
+                    log.Debug(str);
                 }
             }
             catch (IOException e)

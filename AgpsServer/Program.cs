@@ -173,8 +173,7 @@ namespace AgpsServer
             
             var result = bootstrap.Start();
             Console.WriteLine("Start result : {0}!", result);
-            log.Debug("Start result");
-            log.Info("Start succ!");
+            if (log.IsDebugEnabled) log.Debug("Start succ!");
             if (result == StartResult.Failed)
             {
                 Console.WriteLine("Failed to start!");
